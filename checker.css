@@ -242,7 +242,7 @@ a.cyberpunk2077:focus {
       left: 2px;
       width: 100%;
       height: 10px;
-      background-color: #fffcfc;
+      background-color: var(--red-color);
       clip-path: polygon(0px 0px, 85px 0px, 90px 5px, 100% 5px, 100% 6px, 85px 6px, 80px 10px, 0px 10px);
   }
   h1{
