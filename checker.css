@@ -87,7 +87,7 @@ a.cyberpunk2077 {
   padding: 35px 75px;
   margin: 10px;
   position: relative;
-  color: #fff;
+  color:var(--red-color);
   border-right: 3px solid var(--border-color);
   clip-path: polygon(
     -15px 0%,
@@ -128,7 +128,7 @@ a.cyberpunk2077.blue {
 
 button.cyberpunk2077:after,
 a.cyberpunk2077:after {
-  content: "R-25";
+  content: "21BCA1067";
   display: block;
   position: absolute;
   bottom: 0px;
@@ -813,7 +813,7 @@ button.cyberpunk2077, a.cyberpunk2077 {
 }
 
 button.cyberpunk2077:after, a.cyberpunk2077:after {
-    content: "R-25";
+    content: "21BCA1067";
     display: block;
     position: absolute;
     bottom: 0px;
