@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code checker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/editor/editor.main.css">
+</head>
+<body>
+    <div class="video-container">
+        <video autoplay muted loop id="myVideo">
+        <source src="matrix.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+</div>
+    
+    <div class="content-conatiner">
+    <h1 class="cyberpunk glitched"><strong>WRITIO CODE CHECKER</strong></h1>
+    <h3 class="cyberpunk glitched">Enter your code here:</h3>
+    <div id="editor-container" style="height: 300px; width: auto; border: 1px solid #ccc;"></div>
+    <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
+    <button id="check_btn" class="cyberpunk2077 red">Check..</button>
+    
+    <br>
+    <h3 class="cyberpunk glitched">Result:</h3>
+    <div id="output-container" style="height: 300px; width: auto; border: 1px solid #ccc;"></div>
+    <button id="clear_output_btn" class="cyberpunk2077 green">Clear</button>
+    <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
+    </div>
+    <footer>
+        <h2 class="cyberpunk glitched">Made by AMIT.</h2>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.min.js"></script>
+    <script type="module">
+        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
+
+        require(['vs/editor/editor.main'], function() {
+            var editor = monaco.editor.create(document.getElementById('editor-container'), {
+            value: '//Your code goes here... \n',
+            language: 'python',
+            theme: 'vs-dark',
+            automaticLayout: true,
+            readOnly: false, // Allow editing except the first line
+            cursorStyle: 'default', // Change cursor style to default to indicate non-editable
+            cursorBlinking: 'blink' 
+            });
+
+            var outputEditor = monaco.editor.create(document.getElementById('output-container'), {
+                value: '//Result:- \n',
+                language: 'plaintext',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                readOnly: true
+            });
+            var model = outputEditor.getModel();
+            model.deltaDecorations([], [
+                { range: model.getFullModelRange(), options: { isWholeLine: true, className: 'permanent-text' } }
+            ]);
+              editor.onDidChangeCursorPosition(function(e) {
+               if (e.position.lineNumber === 1) {
+               editor.setPosition({ lineNumber: 2, column: 1 });
+                }
+            });
+
+             editor.onDidPaste(function(e) {
+            if (e.range.startLineNumber === 1) {
+            const pastedText = e.text.split('\n');
+            editor.executeEdits('', [{ range: e.range, text: pastedText.slice(1).join('\n') }]);
+            editor.setPosition({ lineNumber: 2, column: 1 });
+              }
+           });
+
+            document.getElementById('check_btn').addEventListener('click', async function() {
+                const inputCode = editor.getValue().trim();
+
+                if (!inputCode) {
+                    alert('Please fill in the Code field.');
+                    return;
+                }
+
+                try {
+                    const modifiedPrompt = "Check if the following code has any errors and if so, provide the line number and error description. Also, provide the corrected code: \n\n" + inputCode;
+                    const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc"; // Replace with your actual API key
+                    const genAI = new GoogleGenerativeAI(apiKey);
+                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                    const result = await model.generateContent(modifiedPrompt);
+                    const response = await result.response;
+                    const text = await response.text();
+
+                    outputEditor.setValue(text);
+                } catch (error) {
+                    console.error('Error:', error.message);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+
+            document.getElementById('clear_input_btn').addEventListener('click', function() {
+                editor.setValue('\n');
+            });
+
+            document.getElementById('clear_output_btn').addEventListener('click', function() {
+                outputEditor.setValue('\n');
+            });
+
+            document.getElementById('copy_output_btn').addEventListener('click', function() {
+                const text = outputEditor.getValue();
+                navigator.clipboard.writeText(text);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -8,7 +8,24 @@
   --blue-color: #136377;
   --green-color: #446d44;
   --purple-color: purple;
+  --Black-color: #070709;
+  --Red-shade-bright:#f42c1d;
+  --Red-shade-dark:#AE1918;
+  --Beige:#fee7b5;
+  --better-orange:#fe8932;
+  --sky:#588273;
+  --dark-green:#08652c;
+  --dark-blue:#200432;
+  --red: rgba(211, 87, 91, 0.81);
+  --red-glow: rgba(211, 87, 91, 0.91);
+  --red-scanline: rgba(204, 94, 98, 0.2);
+  --black-scanline: rgba(1, 1, 1, 0.9);
+  --black-hover-background: rgba(0, 0, 0, 0.25);
+  --blue: #61e4fa;
+  --yellow: #f7f500;
+  --text-shadow: rgb(0, 208, 255);
 }
+
 
 body {
   display: flex;
@@ -22,7 +39,7 @@ video {
   bottom: 0;
   min-width: 100%;
   min-height: 100%;
-  z-index: -1; /* Ensures the video stays behind other content */
+  z-index: -1; 
 }
 
 /* Overlay styles */
@@ -79,7 +96,7 @@ a.cyberpunk2077 {
   display: block;
   border: none;
   border-radius: 0%;
-  font-size: 1.5rem;
+  font-size: 1rem;
   line-height: 1.5rem;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -109,16 +126,12 @@ a.cyberpunk2077:focus {
   animation-duration: var(--glitched-duration);
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+  background-color: var(--purple-color);
 }
 
 button.cyberpunk2077.green,
 a.cyberpunk2077.green {
   --background-color: var(--green-color);
-}
-
-button.cyberpunk2077.purple,
-a.cyberpunk2077.purple {
-  --background-color: var(--purple-color);
 }
 
 button.cyberpunk2077.blue,
@@ -862,5 +875,61 @@ footer {
 .content-container {
   min-height: calc(100vh - 100px); /* Adjust the value as needed */
   flex: 1 0 auto;
-  padding-bottom: 100px; /* Adjust the value as needed */
+  padding-bottom: 100px; 
+  flex-direction: column;/* Adjust the value as needed */
+}
+
+:root {
+  --glitched-duration: 2s;
+  --yellow-color: #f9f002;
+  --purple-color: purple;
+  --border-color: #8ae66e;
+  --red-color: #ff003c;
+  --black-color: #070709;
+}
+
+.cyberpunk.dropdown {
+  background-color: var(--black-color);
+  color: var(--yellow-color);
+  padding: 0.8em 1.2em;
+  border: 2px solid var(--red-color);
+  position: relative;
+  cursor: pointer;
+  display: block;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1rem;
+  user-select: none;
+}
+
+.cyberpunk.dropdown:hover {
+  background-color: var(--purple-color);
+  border-color: var(--yellow-color);
+}
+
+.cyberpunk.dropdown-option {
+  padding: 10px 20px;
+  background-color: var(--black-color);
+  color: var(--yellow-color);
+  border-bottom: 1px solid var(--red-color);
+}
+
+.cyberpunk.dropdown-option:hover {
+  background-color: var(--purple-color);
+  color: var(--red-color);
+}
+
+@keyframes glitch {
+  0%, 100% {
+    clip-path: polygon(0% 25%, 100% 20%, 100% 75%, 0% 80%);
+    transform: translate(0px, 0px);
+  }
+  10%, 30%, 50%, 70% {
+    clip-path: polygon(0% 20%, 100% 15%, 100% 85%, 0% 90%);
+    transform: translate(-5px, 0);
+  }
+  20%, 40%, 60%, 80% {
+    clip-path: polygon(0% 15%, 100% 10%, 100% 90%, 0% 85%);
+    transform: translate(5px, 0);
+  }
 }
