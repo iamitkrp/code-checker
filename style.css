@@ -24,6 +24,29 @@
   --blue: #61e4fa;
   --yellow: #f7f500;
   --text-shadow: rgb(0, 208, 255);
+  --yellow-color: #f9f002;
+  --orange-color: #ff9800;
+  --border-color: #8ae66e;
+  --red-color: #ff003c;
+  --blue-color: #136377;
+  --green-color: #446d44;
+  --purple-color: purple;
+  --Black-color: #070709;
+  --Red-shade-bright:#f42c1d;
+  --Red-shade-dark:#AE1918;
+  --Beige:#fee7b5;
+  --better-orange:#fe8932;
+  --sky:#588273;
+  --dark-green:#08652c;
+  --dark-blue:#200432;
+  --red: rgba(211, 87, 91, 0.81);
+  --red-glow: rgba(211, 87, 91, 0.91);
+  --red-scanline: rgba(204, 94, 98, 0.2);
+  --black-scanline: rgba(1, 1, 1, 0.9);
+  --black-hover-background: rgba(0, 0, 0, 0.25);
+  --blue: #61e4fa;
+  --yellow: #f7f500;
+  --text-shadow: rgb(0, 208, 255);
 }
 
 
@@ -129,6 +152,13 @@ a.cyberpunk2077:focus {
   background-color: var(--purple-color);
 }
 
+button.cyberpunk2077.red,
+a.cyberpunk2077.red {
+  --background-color: var(--Red-shade-bright);
+  padding: 26px 26px 26px 26px;
+}
+
+
 button.cyberpunk2077.green,
 a.cyberpunk2077.green {
   --background-color: var(--green-color);
@@ -222,12 +252,15 @@ a.cyberpunk2077:focus {
     position: relative;
     padding-bottom: 15px;
   }
+  h1.cyberpunk{
+    color: var(--Red-shade-bright);
+  }
   
   h2.cyberpunk {
     font-size: 1.7rem;
     line-height: 1.9rem;
     font-weight: 300;
-    color:var(--yellow-color);
+    color:var(--blue);
   }
   
   h3.cyberpunk {
@@ -255,7 +288,7 @@ a.cyberpunk2077:focus {
       left: 2px;
       width: 100%;
       height: 10px;
-      background-color: var(--red-color);
+      background-color: white;
       clip-path: polygon(0px 0px, 85px 0px, 90px 5px, 100% 5px, 100% 6px, 85px 6px, 80px 10px, 0px 10px);
   }
   h1{
@@ -932,4 +965,23 @@ footer {
     clip-path: polygon(0% 15%, 100% 10%, 100% 90%, 0% 85%);
     transform: translate(5px, 0);
   }
+}
+
+::-webkit-scrollbar {
+  width: 24px; 
+}
+
+::-webkit-scrollbar-track {
+  background: var(--blue-color);
+  border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--blue);
+  border-radius: 10px; 
+  border: 3px solid var(--black-color); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--yellow-color); 
 }
