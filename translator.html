@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css" />
+
 </head>
 <body>
     
@@ -26,7 +27,7 @@
         <h1 id="homepage" class="cyberpunk-glitched-header">WRITIO</h1>
         <h1 class="cyberpunk glitched">CODE TRANSLATOR</h1>
         <h3 class="cyberpunk glitched">Enter your code:</h3>
-        <textarea id="editor" class="code-mirror">// Your code goes here...</textarea>
+        <textarea id="editor" class="cyberpunk">// Your code goes here...</textarea>
         <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
 
         <h3 class="cyberpunk glitched">Target Language:</h3>
@@ -48,7 +49,7 @@
         
         <br>
         <h3 class="cyberpunk glitched">Translated Code:</h3>
-        <textarea id="output" class="cyber-razor">// Translated Code:</textarea>
+        <textarea id="output" class="cyberpunk">// Translated Code:</textarea>
         <button id="clear_output_btn" class="cyberpunk2077 green">Clear</button>
         <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
     </div>
@@ -82,6 +83,14 @@
             lineWrapping: true,
             viewportMargin: Infinity
         });
+
+        // After initializing the CodeMirror editor instances
+var codeEditorWrapper = document.querySelector('#editor + .CodeMirror');
+var outputEditorWrapper = document.querySelector('#output + .CodeMirror');
+
+codeEditorWrapper.style.border = '1px solid var(--border-color)';
+outputEditorWrapper.style.border = '1px solid var(--border-color)';
+
 
         // Dynamically set the language for the editor based on the selected language in the dropdown
         document.getElementById('target_lang').addEventListener('change', function() {
