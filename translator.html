@@ -10,125 +10,129 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/editor/editor.main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css" />
 </head>
 <body>
     
     <div class="video-container">
         <video autoplay muted loop id="myVideo">
-        <source src="matrix.mp4" type="video/mp4">
-    </video>
-    <div class="video-overlay"></div>
-</div>
+            <source src="matrix.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
     
     <div class="content-container">
-    <h1 id="homepage" class="cyberpunk-glitched-header">WRITIO</h1>
-    <h1 class="cyberpunk glitched">CODE TRANSLATOR</h1>
-    <h3 class="cyberpunk glitched">Enter your code:</h3>
-    <div id="editor-container" style="height: 300px; width: auto; border: 1px solid #ccc;"></div>
-    <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
+        <h1 id="homepage" class="cyberpunk-glitched-header">WRITIO</h1>
+        <h1 class="cyberpunk glitched">CODE TRANSLATOR</h1>
+        <h3 class="cyberpunk glitched">Enter your code:</h3>
+        <textarea id="editor" class="code-mirror">// Your code goes here...</textarea>
+        <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
 
-    <h3 class="cyberpunk glitched">Target Language:</h3>
-    <select id="target_lang" class="cyberpunk dropdown">
-        <option value="python" class="cyberpunk dropdown-option">Python</option>
-        <option value="java" class="cyberpunk dropdown-option">Java</option>
-        <option value="javascript" class="cyberpunk dropdown-option">JavaScript</option>
-        <option value="csharp" class="cyberpunk dropdown-option">C#</option>
-        <option value="cpp" class="cyberpunk dropdown-option">C++</option>
-        <option value="php" class="cyberpunk dropdown-option">PHP</option>
-        <option value="ruby" class="cyberpunk dropdown-option">Ruby</option>
-        <option value="go" class="cyberpunk dropdown-option">Go</option>
-        <option value="swift" class="cyberpunk dropdown-option">Swift</option>
-        <option value="kotlin" class="cyberpunk dropdown-option">Kotlin</option>
-        <option value="rust" class="cyberpunk dropdown-option">Rust</option>
-    </select>
+        <h3 class="cyberpunk glitched">Target Language:</h3>
+        <select id="target_lang" class="cyberpunk dropdown">
+            <option value="python" class="cyberpunk dropdown-option">Python</option>
+            <option value="java" class="cyberpunk dropdown-option">Java</option>
+            <option value="javascript" class="cyberpunk dropdown-option">JavaScript</option>
+            <option value="csharp" class="cyberpunk dropdown-option">C#</option>
+            <option value="cpp" class="cyberpunk dropdown-option">C++</option>
+            <option value="php" class="cyberpunk dropdown-option">PHP</option>
+            <option value="ruby" class="cyberpunk dropdown-option">Ruby</option>
+            <option value="go" class="cyberpunk dropdown-option">Go</option>
+            <option value="swift" class="cyberpunk dropdown-option">Swift</option>
+            <option value="kotlin" class="cyberpunk dropdown-option">Kotlin</option>
+            <option value="rust" class="cyberpunk dropdown-option">Rust</option>
+        </select>
 
-    <button id="check_btn" class="cyberpunk2077 red">Translate</button>
-    
-    <br>
-    <h3 class="cyberpunk glitched">Translated Code:</h3>
-    <div id="output-container" style="height: 300px; width: auto; border: 1px solid #ccc;"></div>
-    <button id="clear_output_btn" class="cyberpunk2077 green">Clear</button>
-    <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
+        <button id="check_btn" class="cyberpunk2077 red">Translate</button>
+        
+        <br>
+        <h3 class="cyberpunk glitched">Translated Code:</h3>
+        <textarea id="output" class="cyber-razor">// Translated Code:</textarea>
+        <button id="clear_output_btn" class="cyberpunk2077 green">Clear</button>
+        <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
     </div>
     <footer>
         <h2 class="cyberpunk glitched">Made by <span class="amit">AMIT.</span> </h2>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/mode/python/python.min.js"></script>
     <script type="module">
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
+        var codeEditor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+            value:'\n// Your code goes here...',
+            mode: 'python',
+            theme: 'dracula',
+            matchBrackets: true,
+            autocloseBrackets: true,
+            lineWrapping: true,
+            viewportMargin: Infinity,
+            lineNumbers: true,
+            readOnly: false
+        });
 
-        require(['vs/editor/editor.main'], function() {
-            var codeEditor = monaco.editor.create(document.getElementById('editor-container'), {
-            value: '//Your code goes here... \n',
-            language: 'python',
-            theme: 'vs-dark',
-            automaticLayout: true,
-            readOnly: false, // Allow editing
-            cursorStyle: 'default', // Change cursor style to default
-            cursorBlinking: 'blink' 
-            });
+        var outputEditor = CodeMirror.fromTextArea(document.getElementById('output'), {
+            value: '\n// Translated Code:',
+            mode: 'python',
+            theme: 'dracula',
+            lineNumbers: true,
+            readOnly: true,
+            lineWrapping: true,
+            viewportMargin: Infinity
+        });
 
-            var outputEditor = monaco.editor.create(document.getElementById('output-container'), {
-                value: '//Translated Code:- \n',
-                language: 'plaintext',
-                theme: 'vs-dark',
-                automaticLayout: true,
-                readOnly: true
-            });
-            var model = outputEditor.getModel();
-            model.deltaDecorations([], [
-                { range: model.getFullModelRange(), options: { isWholeLine: true, className: 'permanent-text' } }
-            ]);
+        // Dynamically set the language for the editor based on the selected language in the dropdown
+        document.getElementById('target_lang').addEventListener('change', function() {
+            var selectedLanguage = this.value;
+            codeEditor.setOption('mode', selectedLanguage);
+        });
 
-            document.getElementById('homepage').addEventListener('click', function() {
-       window.location.href = 'index.html';
-           });
+        document.getElementById('homepage').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
 
-            document.getElementById('check_btn').addEventListener('click', async function() {
-                const sourceCode = codeEditor.getValue().trim();
-                const targetLanguage = document.getElementById('target_lang').value;
+        document.getElementById('check_btn').addEventListener('click', async function() {
+            const sourceCode = codeEditor.getValue().trim();
+            const targetLanguage = document.getElementById('target_lang').value;
 
-                if (!sourceCode) {
-                    alert('Please fill in the Code field.');
-                    return;
-                }
+            if (!sourceCode) {
+                alert('Please fill in the Code field.');
+                return;
+            }
 
-                try {
-                    const modifiedPrompt = `Translate the following code from the source language to ${targetLanguage}:\n\n${sourceCode}`;
-                    const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc"; 
-                    const genAI = new GoogleGenerativeAI(apiKey);
-                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-                    const result = await model.generateContent(modifiedPrompt);
-                    const response = await result.response;
-                    const text = await response.text();
+            try {
+                const modifiedPrompt = `Translate the following code from the source language to ${targetLanguage}:\n\n${sourceCode}`;
+                const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc";
+                const genAI = new GoogleGenerativeAI(apiKey);
+                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                const result = await model.generateContent(modifiedPrompt);
+                const response = await result.response;
+                const text = await response.text();
 
-                    const outputIndex = text.indexOf('Output:');
-                    const translatedCode = outputIndex !== -1 ?
-                        text.substring(0, outputIndex).trim() : text.trim();
+                const outputIndex = text.indexOf('Output:');
+                const translatedCode = outputIndex !== -1 ?
+                    text.substring(0, outputIndex).trim() : text.trim();
 
-                    outputEditor.setValue(translatedCode);
-                } catch (error) {
-                    console.error('Error:', error.message);
-                    alert('An error occurred. Please try again.');
-                }
-            });
+                outputEditor.setValue(translatedCode);
+            } catch (error) {
+                console.error('Error:', error.message);
+                alert('An error occurred. Please try again.');
+            }
+        });
 
-            document.getElementById('clear_input_btn').addEventListener('click', function() {
-                codeEditor.setValue('\n');
-            });
+        document.getElementById('clear_input_btn').addEventListener('click', function() {
+            codeEditor.setValue('\n// Your code goes here...');
+        });
 
-            document.getElementById('clear_output_btn').addEventListener('click', function() {
-                outputEditor.setValue('\n');
-            });
+        document.getElementById('clear_output_btn').addEventListener('click', function() {
+            outputEditor.setValue('\n// Translated Code:');
+        });
 
-            document.getElementById('copy_output_btn').addEventListener('click', function() {
-                const text = outputEditor.getValue();
-                navigator.clipboard.writeText(text);
-            });
+        document.getElementById('copy_output_btn').addEventListener('click', function() {
+            const text = outputEditor.getValue();
+            navigator.clipboard.writeText(text);
         });
     </script>
 </body>

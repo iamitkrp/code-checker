@@ -222,6 +222,8 @@ a.cyberpunk2077:focus {
   animation-timing-function: linear;
 }
 
+
+
 /* Additional styles have not been changed and can be modified or kept based on your needs */
 
   html, body {
@@ -270,6 +272,7 @@ h1.cyberpunk-glitched-header{
   font-family: Cyberpunk;
   color: var(--yellow-color);
   cursor: pointer;
+
 }
 h1.cyberpunk-glitched-header:before{
   content: "";
@@ -364,6 +367,7 @@ h1.cyberpunk-glitched-header:before {
   }
 }
   h1.cyberpunk-glitched-header:after{
+    color: var(--Beige);
     content: "_ _";
     animation-name: hxafter;
     animation-duration: var(--glitched-duration);
@@ -800,7 +804,7 @@ h1.cyberpunk-glitched-header:before {
   
   
   button#clear_output_btn {
-    --background-color: var(--green-color);
+    --background-color: var(--blue-color);
     display: block;
     border: none;
     border-radius: 0%;
@@ -810,7 +814,7 @@ h1.cyberpunk-glitched-header:before {
     text-transform: uppercase;
     font-weight: 600;
     padding: 20px 50px;
-    margin: 10px;
+    margin-top: 30px;
     position: relative;
     color: #fff;
     border-right: 3px solid var(--border-color);
@@ -837,7 +841,7 @@ button#copy_output_btn {
     text-transform: uppercase;
     font-weight: 600;
     padding: 20px 50px;
-    margin: 10px;
+    margin-top: 30px;
     position: relative;
     color: #fff;
     border-right: 3px solid var(--border-color);
@@ -854,7 +858,7 @@ button#copy_output_btn {
     display: inline-block;
 }
 button#clear_input_btn {
-    --background-color: var(--green-color);
+    --background-color: var(--blue-color);
     display: block;
     border: none;
     border-radius: 0%;
@@ -864,7 +868,7 @@ button#clear_input_btn {
     text-transform: uppercase;
     font-weight: 600;
     padding: 20px 50px; 
-    margin: 10px;
+    margin-top: 30px;
     position: relative;
     color: #fff;
     border-right: 3px solid var(--border-color);
@@ -1062,7 +1066,6 @@ footer {
 .content-container {
   min-height: calc(100vh - 100px); 
   flex: 1 0 auto;
-  padding-bottom: 100px; 
   flex-direction: column;
 }
 
