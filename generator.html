@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Generator</title>
+    <title>Writio Code Generator</title>
+    <link rel="icon" href="../images/writio(wh-bg).png" type=""> 
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/editor/editor.main.css">
 </head>
 <body>
@@ -16,7 +21,8 @@
 </div>
     
     <div class="content-conatiner">
-    <h1 class="cyberpunk glitched"><strong>WRITIO CODE GENERATOR</strong></h1>
+    <h1 id="homepage" class="cyberpunk-glitched-header">WRITIO</h1>
+    <h1 class="cyberpunk glitched">CODE GENERATOR</h1>
     <h3 class="cyberpunk glitched">Enter your prompt:</h3>
     <div id="editor-container" style="height: 200px; width: auto; border: 1px solid #ccc;"></div>
     <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
@@ -29,7 +35,7 @@
     <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
     </div>
     <footer>
-        <h2 class="cyberpunk glitched">Made by AMIT.</h2>
+        <h2 class="cyberpunk glitched">Made by <span class="amit">AMIT.</span> </h2>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.min.js"></script>
@@ -44,8 +50,8 @@
             language: 'plaintext',
             theme: 'vs-dark',
             automaticLayout: true,
-            readOnly: false, // Allow editing
-            cursorStyle: 'default', // Change cursor style to default
+            readOnly: false, 
+            cursorStyle: 'default', 
             cursorBlinking: 'blink' 
             });
 
@@ -71,7 +77,7 @@
 
                 try {
                     const modifiedPrompt = prompt + " code in {target_language} and print the output in a separate line";
-                    const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc"; // Replace with your actual API key
+                    const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc"; 
                     const genAI = new GoogleGenerativeAI(apiKey);
                     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                     const result = await model.generateContent(modifiedPrompt);
@@ -92,6 +98,9 @@
                     alert('An error occurred. Please try again.');
                 }
             });
+            document.getElementById('homepage').addEventListener('click', function() {
+       window.location.href = 'index.html';
+           });
 
             document.getElementById('clear_input_btn').addEventListener('click', function() {
                 promptEditor.setValue('\n');
