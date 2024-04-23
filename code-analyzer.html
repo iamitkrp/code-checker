@@ -16,7 +16,7 @@
 <body>
     <div class="video-container">
         <video autoplay muted loop id="myVideo">
-            <source src="matrix.mp4" type="video/mp4">
+            <source src="bg8.mp4" type="video/mp4">
         </video>
         <div class="video-overlay"></div>
     </div>
@@ -58,7 +58,7 @@
 
         var outputEditor = CodeMirror.fromTextArea(document.getElementById('output'), {
             value: '\n// Result:',
-            mode: 'plaintext',
+            mode: 'python',
             theme: 'dracula',
             lineNumbers: true,
             readOnly: true,
@@ -96,6 +96,20 @@
                 alert('An error occurred. Please try again.');
             }
         });
+
+         
+         function applyGlassmorphism() {
+            var cmWrappers = document.querySelectorAll('.CodeMirror');
+            cmWrappers.forEach(function(cm) {
+                cm.style.background = 'rgba(255, 255, 255, 0.1)';
+                cm.style.borderRadius = '10px';
+                cm.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                cm.style.backdropFilter = 'blur(10px)';
+                cm.style.webkitBackdropFilter = 'blur(10px)';
+            });
+        }
+
+        window.onload = applyGlassmorphism;
 
         document.getElementById('homepage').addEventListener('click', function() {
             window.location.href = 'index.html';
