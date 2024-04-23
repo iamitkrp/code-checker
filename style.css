@@ -47,6 +47,28 @@
   --blue: #61e4fa;
   --yellow: #f7f500;
   --text-shadow: rgb(0, 208, 255);
+  --violet-scanline: rgba(143, 0, 255, 0.2);
+--blue-scanline: rgba(0, 132, 255, 0.2);
+--purple-scanline: rgba(163, 73, 164, 0.2);
+--yellow-scanline: rgba(255, 255, 0, 0.2);
+--pink-scanline: rgba(255, 105, 180, 0.2);
+--cyberpunk1-scanline: rgba(255, 0, 255, 0.2); /* Magenta */
+--cyberpunk2-scanline: rgba(0, 255, 255, 0.2); /* Cyan */
+--cyberpunk3-scanline: rgba(255, 165, 0, 0.2); /* Orange */
+--cyberpunk4-scanline: rgba(255, 69, 0, 0.2); /* Orange-Red */
+--cyberpunk5-scanline: rgba(139, 0, 139, 0.2); /* Dark Magenta */
+--cyberpunk6-scanline: rgba(0, 255, 127, 0.2); /* Spring Green */
+--cyberpunk7-scanline: rgba(0, 255, 0, 0.2); /* Green */
+--cyberpunk8-scanline: rgba(255, 20, 147, 0.2); /* Deep Pink */
+--cyberpunk9-scanline: rgba(255, 215, 0, 0.2); /* Gold */
+--cyberpunk10-scanline: rgba(255, 20, 147, 0.2); /* Deep Pink */
+--cyberpunk11-scanline: rgba(255, 140, 0, 0.2); /* Dark Orange */
+--cyberpunk12-scanline: rgba(255, 0, 0, 0.2); /* Red */
+--cyberpunk13-scanline: rgba(128, 0, 128, 0.2); /* Purple */
+--cyberpunk14-scanline: rgba(0, 128, 128, 0.2); /* Teal */
+--cyberpunk15-scanline: rgba(255, 255, 255, 0.2); /* White */
+--cyberpunk16-scanline: rgba(128, 128, 128, 0.2); /* Gray */
+
 }
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap');
 
@@ -148,7 +170,7 @@ a.cyberpunk2077:focus {
   animation-duration: var(--glitched-duration);
   animation-iteration-count: infinite;
   animation-timing-function: linear;
-  background-color: var(--purple-color);
+  background-color: var(--cyberpunk8-scanline);
 }
 
 button.cyberpunk2077.red,
@@ -804,7 +826,7 @@ h1.cyberpunk-glitched-header:before {
   
   
   button#clear_output_btn {
-    --background-color: var(--blue-color);
+    --background-color: var(--cyberpunk4-scanline);
     display: block;
     border: none;
     border-radius: 0%;
@@ -831,7 +853,7 @@ h1.cyberpunk-glitched-header:before {
     display: inline-block;
 }
 button#copy_output_btn {
-    --background-color: var(--purple-color);
+    --background-color: var(--cyberpunk6-scanline);
     display: block;
     border: none;
     border-radius: 0%;
@@ -857,8 +879,30 @@ button#copy_output_btn {
     outline: none;
     display: inline-block;
 }
+button#copy_output_btn:hover{
+  animation-name: buttonhover;
+  animation-duration: var(--glitched-duration);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  background-color:darkblue;
+}
+button#clear_output_btn:hover{
+  animation-name: buttonhover;
+  animation-duration: var(--glitched-duration);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  background-color:darkviolet;
+}
+button#clear_input_btn:hover{
+  animation-name: buttonhover;
+  animation-duration: var(--glitched-duration);
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  background-color:darkblue;
+}
+
 button#clear_input_btn {
-    --background-color: var(--blue-color);
+    --background-color: var(--cyberpunk4-scanline);
     display: block;
     border: none;
     border-radius: 0%;
@@ -1081,7 +1125,7 @@ footer {
 }
 
 .cyberpunk.dropdown {
-  background-color: var(--black-color);
+  background-color: var(--cyberpunk16-scanline);
   color: var(--yellow-color);
   padding: 0.8em 1.2em;
   border: 2px solid var(--red-color);
@@ -1095,7 +1139,7 @@ footer {
 }
 
 .cyberpunk.dropdown:hover {
-  background-color: var(--purple-color);
+  background-color: var(--cyberpunk16-scanline);
   border-color: var(--yellow-color);
 }
 

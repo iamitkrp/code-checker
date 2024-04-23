@@ -11,28 +11,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/editor/editor.main.css">
+    <link rel="stylesheet" href="loader.css"
 </head>
 <body>
     <div class="video-container">
         <video autoplay muted loop id="myVideo">
-        <source src="bg10.mp4" type="video/mp4">
-    </video>
-    <div class="video-overlay"></div>
-</div>
-    
-    <div class="content-conatiner">
-    <h1 id="homepage" class="cyberpunk-glitched-header">WRITIO</h1>
-    <h1 class="cyberpunk glitched">CODE GENERATOR</h1>
-    <h3 class="cyberpunk glitched">Enter your prompt:</h3>
-    <div id="editor-container" style="height: 200px; width: auto; border: 1px solid #ccc;"></div>
-    <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
-    <button id="check_btn" class="cyberpunk2077 red">Generate Code</button>
-    
-    <br>
-    <h3 class="cyberpunk glitched">Generated Code:</h3>
-    <div id="output-container" style="height: 300px; width: auto; border: 1px solid #ccc;"></div>
-    <button id="clear_output_btn" class="cyberpunk2077 green">Clear</button>
-    <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
+            <source src="bg10.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div class="loader" id="loader">
+        <div style="--i: 1"></div>
+        <div style="--i: 2"></div>
+        <div style="--i: 3"></div>
+        <div style="--i: 4"></div>
+    </div>
+
+    <div class="content-container">
+        <h1 id="homepage" class="cyberpunk-glitched-header">WRITIO</h1>
+        <h1 class="cyberpunk glitched">CODE GENERATOR</h1>
+        <h3 class="cyberpunk glitched">Enter your prompt:</h3>
+        <div id="editor-container" style="height: 200px; width: auto; border: 1px solid #ccc;"></div>
+        <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
+        <button id="check_btn" class="cyberpunk2077 red">Generate Code</button>
+
+        <br>
+        <h3 class="cyberpunk glitched">Generated Code:</h3>
+        <div id="output-container" style="height: 300px; width: auto; border: 1px solid #ccc;"></div>
+        <button id="clear_output_btn" class="cyberpunk2077 green">Clear</button>
+        <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
     </div>
     <footer>
         <h2 class="cyberpunk glitched">Made by <span class="amit">AMIT.</span> </h2>
@@ -41,18 +49,16 @@
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.min.js"></script>
     <script type="module">
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
-
         require(['vs/editor/editor.main'], function() {
             var promptEditor = monaco.editor.create(document.getElementById('editor-container'), {
-            value: '//Your prompt goes here... \n',
-            language: 'plaintext',
-            theme: 'vs-dark',
-            automaticLayout: true,
-            readOnly: false, 
-            cursorStyle: 'default', 
-            cursorBlinking: 'blink' 
+                value: '//Your prompt goes here... \n',
+                language: 'plaintext',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                readOnly: false, 
+                cursorStyle: 'default', 
+                cursorBlinking: 'blink' 
             });
 
             var outputEditor = monaco.editor.create(document.getElementById('output-container'), {
@@ -68,39 +74,44 @@
             ]);
 
             document.getElementById('check_btn').addEventListener('click', async function() {
+                // Show the loader
+                document.getElementById('loader').style.display = 'flex';
+
                 const prompt = promptEditor.getValue().trim();
 
                 if (!prompt) {
                     alert('Please fill in the Prompt field.');
+                    document.getElementById('loader').style.display = 'none';  // Hide loader if no prompt
                     return;
                 }
 
                 try {
                     const modifiedPrompt = prompt + " code in {target_language} and print the output in a separate line";
-                    const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc"; 
-                    const genAI = new GoogleGenerativeAI(apiKey);
+                    const genAI = new GoogleGenerativeAI("AIzaSyAk4ec-G_PqABFRFfqhlFDjbx9SNDraBt8");
                     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                     const result = await model.generateContent(modifiedPrompt);
                     const response = await result.response;
                     const text = await response.text();
 
                     const outputIndex = text.indexOf('Output:');
-                    const codeContent = outputIndex !== -1 ?
-                        text.substring(0, outputIndex).trim() : text.trim();
+                    const codeContent = outputIndex !== -1 ? text.substring(0, outputIndex).trim() : text.trim();
                     const codeLines = codeContent.split('\n');
-                    const filteredCodeLines = codeLines.filter(line =>
-                        !line.includes('```'));
+                    const filteredCodeLines = codeLines.filter(line => !line.includes('```'));
                     const generatedCode = filteredCodeLines.join('\n').trim();
 
                     outputEditor.setValue(generatedCode);
                 } catch (error) {
                     console.error('Error:', error.message);
                     alert('An error occurred. Please try again.');
+                } finally {
+                    // Hide the loader after processing
+                    document.getElementById('loader').style.display = 'none';
                 }
             });
+
             document.getElementById('homepage').addEventListener('click', function() {
-       window.location.href = 'index.html';
-           });
+                window.location.href = 'index.html';
+            });
 
             document.getElementById('clear_input_btn').addEventListener('click', function() {
                 promptEditor.setValue('\n');

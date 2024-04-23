@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writio Code Translator</title>
-    <link rel="icon" href="../images/writio(wh-bg).png" type=""> 
+    <link rel="icon" href="../images/writio(wh-bg).png" type="">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +12,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css" />
-
+    <link rel="stylesheet" href="loader.css">
 </head>
 <body>
-    
+    <div class="loader" id="loader">
+        <div style="--i: 1"></div>
+        <div style="--i: 2"></div>
+        <div style="--i: 3"></div>
+        <div style="--i: 4"></div>
+    </div>
     <div class="video-container">
         <video autoplay muted loop id="myVideo">
             <source src="bg3.mp4" type="video/mp4">
@@ -29,24 +34,32 @@
         <h3 class="cyberpunk glitched">Enter your code:</h3>
         <textarea id="editor" class="cyberpunk">// Your code goes here...</textarea>
         <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
-
+        
         <h3 class="cyberpunk glitched">Target Language:</h3>
         <select id="target_lang" class="cyberpunk dropdown">
             <option value="python" class="cyberpunk dropdown-option">Python</option>
             <option value="java" class="cyberpunk dropdown-option">Java</option>
-            <option value="javascript" class="cyberpunk dropdown-option">JavaScript</option>
+            <option value="JavaScript" class="cyberpunk dropdown-option">JavaScript</option>
             <option value="csharp" class="cyberpunk dropdown-option">C#</option>
             <option value="cpp" class="cyberpunk dropdown-option">C++</option>
-            <option value="php" class="cyberpunk dropdown-option">PHP</option>
             <option value="ruby" class="cyberpunk dropdown-option">Ruby</option>
             <option value="go" class="cyberpunk dropdown-option">Go</option>
+            <option value="php" class="cyberpunk dropdown-option">PHP</option>
             <option value="swift" class="cyberpunk dropdown-option">Swift</option>
-            <option value="kotlin" class="cyberpunk dropdown-option">Kotlin</option>
             <option value="rust" class="cyberpunk dropdown-option">Rust</option>
-        </select>
+            <option value="kotlin" class="cyberpunk dropdown-option">Kotlin</option>
+            <option value="typescript" class="cyberpunk dropdown-option">TypeScript</option>
+            <option value="html" class="cyberpunk dropdown-option">HTML</option>
+            <option value="css" class="cyberpunk dropdown-option">CSS</option>
+            <option value="sql" class="cyberpunk dropdown-option">SQL</option>
+            <option value="bash" class="cyberpunk dropdown-option">Bash</option>
+            <option value="perl" class="cyberpunk dropdown-option">Perl</option>
+            <option value="scala" class="cyberpunk dropdown-option">Scala</option>
 
-        <button id="check_btn" class="cyberpunk2077 red">Translate</button>
+            <!-- Additional options -->
+        </select>
         
+        <button id="check_btn" class="cyberpunk2077 red">Translate</button>
         <br>
         <h3 class="cyberpunk glitched">Translated Code:</h3>
         <textarea id="output" class="cyberpunk">// Translated Code:</textarea>
@@ -54,16 +67,16 @@
         <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
     </div>
     <footer>
-        <h2 class="cyberpunk glitched">Made by <span class="amit">AMIT.</span> </h2>
+        <h2 class="cyberpunk glitched">Made by <span class="amit">AMIT.</span></h2>
     </footer>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/mode/python/python.min.js"></script>
     <script type="module">
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-
+        
         var codeEditor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-            value:'\n// Your code goes here...',
+            value: '\n// Your code goes here...',
             mode: 'python',
             theme: 'dracula',
             matchBrackets: true,
@@ -73,7 +86,7 @@
             lineNumbers: true,
             readOnly: false
         });
-
+        
         var outputEditor = CodeMirror.fromTextArea(document.getElementById('output'), {
             value: '\n// Translated Code:',
             mode: 'python',
@@ -84,74 +97,49 @@
             viewportMargin: Infinity
         });
 
-        // After initializing the CodeMirror editor instances
-var codeEditorWrapper = document.querySelector('#editor + .CodeMirror');
-var outputEditorWrapper = document.querySelector('#output + .CodeMirror');
-
-codeEditorWrapper.style.border = '1px solid var(--border-color)';
-outputEditorWrapper.style.border = '1px solid var(--border-color)';
-
-
-        // Dynamically set the language for the editor based on the selected language in the dropdown
-        document.getElementById('target_lang').addEventListener('change', function() {
-            var selectedLanguage = this.value;
-            codeEditor.setOption('mode', selectedLanguage);
-        });
-
-        document.getElementById('homepage').addEventListener('click', function() {
-            window.location.href = 'index.html';
-        });
-
         document.getElementById('check_btn').addEventListener('click', async function() {
+            document.getElementById('loader').style.display = 'flex'; // Show loader
+            
             const sourceCode = codeEditor.getValue().trim();
             const targetLanguage = document.getElementById('target_lang').value;
-
+            
             if (!sourceCode) {
                 alert('Please fill in the Code field.');
+                document.getElementById('loader').style.display = 'none'; // Hide loader if no input
                 return;
             }
-
+            
             try {
                 const modifiedPrompt = `Translate the following code from the source language to ${targetLanguage}:\n\n${sourceCode}`;
-                const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc";
+                const 
+                apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc";
                 const genAI = new GoogleGenerativeAI(apiKey);
                 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                 const result = await model.generateContent(modifiedPrompt);
                 const response = await result.response;
                 const text = await response.text();
-
+                
                 const outputIndex = text.indexOf('Output:');
                 const translatedCode = outputIndex !== -1 ?
                     text.substring(0, outputIndex).trim() : text.trim();
-
+                
                 outputEditor.setValue(translatedCode);
             } catch (error) {
                 console.error('Error:', error.message);
                 alert('An error occurred. Please try again.');
+            } finally {
+                document.getElementById('loader').style.display = 'none'; // Hide loader after processing
             }
         });
-
-         function applyGlassmorphism() {
-            var cmWrappers = document.querySelectorAll('.CodeMirror');
-            cmWrappers.forEach(function(cm) {
-                cm.style.background = 'rgba(255, 255, 255, 0.1)';
-                cm.style.borderRadius = '10px';
-                cm.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-                cm.style.backdropFilter = 'blur(110px)';
-                cm.style.webkitBackdropFilter = 'blur(110px)';
-            });
-        }
-
-        window.onload = applyGlassmorphism;
-
+        
         document.getElementById('clear_input_btn').addEventListener('click', function() {
             codeEditor.setValue('\n// Your code goes here...');
         });
-
+        
         document.getElementById('clear_output_btn').addEventListener('click', function() {
             outputEditor.setValue('\n// Translated Code:');
         });
-
+        
         document.getElementById('copy_output_btn').addEventListener('click', function() {
             const text = outputEditor.getValue();
             navigator.clipboard.writeText(text);

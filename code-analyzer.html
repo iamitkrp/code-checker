@@ -12,8 +12,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css" />
+    <link rel="stylesheet" href="loader.css"
 </head>
 <body>
+    <div class="loader" id="loader">
+        <div style="--i: 1"></div>
+        <div style="--i: 2"></div>
+        <div style="--i: 3"></div>
+        <div style="--i: 4"></div>
+    </div>
     <div class="video-container">
         <video autoplay muted loop id="myVideo">
             <source src="bg8.mp4" type="video/mp4">
@@ -43,7 +50,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/mode/python/python.min.js"></script>
     <script type="module">
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-
+    
         var codeEditor = CodeMirror.fromTextArea(document.getElementById('editor'), {
             value:'\n// Your code goes here...',
             mode: 'python',
@@ -55,7 +62,7 @@
             lineNumbers: true,
             readOnly: false
         });
-
+    
         var outputEditor = CodeMirror.fromTextArea(document.getElementById('output'), {
             value: '\n// Result:',
             mode: 'python',
@@ -65,64 +72,45 @@
             lineWrapping: true,
             viewportMargin: Infinity
         });
-
-        // After initializing the CodeMirror editor instances
-        var codeEditorWrapper = document.querySelector('#editor + .CodeMirror');
-        var outputEditorWrapper = document.querySelector('#output + .CodeMirror');
-
-        codeEditorWrapper.style.border = '1px solid var(--border-color)';
-        outputEditorWrapper.style.border = '1px solid var(--border-color)';
-
+    
         document.getElementById('check_btn').addEventListener('click', async function() {
+            // Show the loader
+            document.getElementById('loader').style.display = 'flex';
+    
             const inputCode = codeEditor.getValue().trim();
-
             if (!inputCode) {
                 alert('Please fill in the Code field.');
+                document.getElementById('loader').style.display = 'none'; // Hide loader if no input
                 return;
             }
-
+    
             try {
                 const modifiedPrompt = "Check if the following code has any errors and if so, provide the line number and error description. Also, provide the corrected code: \n\n" + inputCode;
-                const apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc";
+                const apiKey = "AIzaSyAk4ec-G_PqABFRFfqhlFDjbx9SNDraBt8"; // Ensure your API key is correctly placed here
                 const genAI = new GoogleGenerativeAI(apiKey);
                 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                 const result = await model.generateContent(modifiedPrompt);
                 const response = await result.response;
                 const text = await response.text();
-
+    
                 outputEditor.setValue(text);
             } catch (error) {
                 console.error('Error:', error.message);
                 alert('An error occurred. Please try again.');
+            } finally {
+                // Hide the loader after processing
+                document.getElementById('loader').style.display = 'none';
             }
         });
-
-         
-         function applyGlassmorphism() {
-            var cmWrappers = document.querySelectorAll('.CodeMirror');
-            cmWrappers.forEach(function(cm) {
-                cm.style.background = 'rgba(255, 255, 255, 0.1)';
-                cm.style.borderRadius = '10px';
-                cm.style.border = '1px solid rgba(255, 255, 255, 0.2)';
-                cm.style.backdropFilter = 'blur(10px)';
-                cm.style.webkitBackdropFilter = 'blur(10px)';
-            });
-        }
-
-        window.onload = applyGlassmorphism;
-
-        document.getElementById('homepage').addEventListener('click', function() {
-            window.location.href = 'index.html';
-        });
-
+    
         document.getElementById('clear_input_btn').addEventListener('click', function() {
             codeEditor.setValue('\n// Your code goes here...');
         });
-
+    
         document.getElementById('clear_output_btn').addEventListener('click', function() {
             outputEditor.setValue('\n// Result:');
         });
-
+    
         document.getElementById('copy_output_btn').addEventListener('click', function() {
             const text = outputEditor.getValue();
             navigator.clipboard.writeText(text);
