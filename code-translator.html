@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writio Code Translator</title>
-    <link rel="icon" href="../images/writio(wh-bg).png" type="">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/writio(wh-bg).png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css" />
-    <link rel="stylesheet" href="loader.css">
+    <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
     <div class="loader" id="loader">
@@ -23,7 +23,7 @@
     </div>
     <div class="video-container">
         <video autoplay muted loop id="myVideo">
-            <source src="bg3.mp4" type="video/mp4">
+            <source src="videos/bg3.mp4" type="video/mp4">
         </video>
         <div class="video-overlay"></div>
     </div>
@@ -112,7 +112,7 @@
             try {
                 const modifiedPrompt = `Translate the following code from the source language to ${targetLanguage}:\n\n${sourceCode}`;
                 const 
-                apiKey = "AIzaSyC3t1Y2VLphaTVviDM82iEe5pMLzap8_xc";
+                apiKey = "YOUR_GEMINI_API_KEY"; // Replace with your Google AI Studio API key
                 const genAI = new GoogleGenerativeAI(apiKey);
                 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                 const result = await model.generateContent(modifiedPrompt);

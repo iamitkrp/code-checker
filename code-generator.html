@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writio Code Generator</title>
-    <link rel="icon" href="../images/writio(wh-bg).png" type=""> 
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/writio(wh-bg).png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/editor/editor.main.css">
-    <link rel="stylesheet" href="loader.css"
+    <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
     <div class="video-container">
         <video autoplay muted loop id="myVideo">
-            <source src="bg10.mp4" type="video/mp4">
+            <source src="videos/bg10.mp4" type="video/mp4">
         </video>
         <div class="video-overlay"></div>
     </div>
@@ -87,7 +87,7 @@
 
                 try {
                     const modifiedPrompt = prompt + " code in {target_language} and print the output in a separate line";
-                    const genAI = new GoogleGenerativeAI("AIzaSyAk4ec-G_PqABFRFfqhlFDjbx9SNDraBt8");
+                    const genAI = new GoogleGenerativeAI("YOUR_GEMINI_API_KEY"); // Replace with your Google AI Studio API key
                     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                     const result = await model.generateContent(modifiedPrompt);
                     const response = await result.response;
