@@ -51,6 +51,15 @@
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
         require(['vs/editor/editor.main'], function() {
+            async function loadGeminiApiKey() {
+                const response = await fetch('.env.local');
+                const text = await response.text();
+                const match = text.match(/GEMINI_API_KEY\s*=\s*(.+)/);
+                if (!match) {
+                    throw new Error('GEMINI_API_KEY not found in .env.local');
+                }
+                return match[1].trim();
+            }
             var promptEditor = monaco.editor.create(document.getElementById('editor-container'), {
                 value: '//Your prompt goes here... \n',
                 language: 'plaintext',
@@ -87,7 +96,8 @@
 
                 try {
                     const modifiedPrompt = prompt + " code in {target_language} and print the output in a separate line";
-                    const genAI = new GoogleGenerativeAI("YOUR_GEMINI_API_KEY"); // Replace with your Google AI Studio API key
+                    const apiKey = await loadGeminiApiKey();
+                    const genAI = new GoogleGenerativeAI(apiKey);
                     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                     const result = await model.generateContent(modifiedPrompt);
                     const response = await result.response;

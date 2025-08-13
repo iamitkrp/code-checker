@@ -41,10 +41,9 @@ git clone https://github.com/yourusername/writio.git
 cd writio
 ```
 
-2. Replace API key placeholders:
-- Open `code-generator.html`, `code-translator.html`, and `code-analyzer.html`
-- Find the line containing `YOUR_GEMINI_API_KEY`
-- Replace it with your actual Google AI Studio API key
+2. Provide your API key:
+- Create a file named `.env.local` in the project root
+- Add your key in the format `GEMINI_API_KEY=YOUR_KEY_HERE`
 
 3. Serve the project:
 - Use any web server of your choice (e.g., Python's built-in server):

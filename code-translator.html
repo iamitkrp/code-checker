@@ -35,27 +35,29 @@
         <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
         
         <h3 class="cyberpunk glitched">Target Language:</h3>
-        <select id="target_lang" class="cyberpunk dropdown">
-            <option value="python" class="cyberpunk dropdown-option">Python</option>
-            <option value="java" class="cyberpunk dropdown-option">Java</option>
-            <option value="JavaScript" class="cyberpunk dropdown-option">JavaScript</option>
-            <option value="csharp" class="cyberpunk dropdown-option">C#</option>
-            <option value="cpp" class="cyberpunk dropdown-option">C++</option>
-            <option value="ruby" class="cyberpunk dropdown-option">Ruby</option>
-            <option value="go" class="cyberpunk dropdown-option">Go</option>
-            <option value="php" class="cyberpunk dropdown-option">PHP</option>
-            <option value="swift" class="cyberpunk dropdown-option">Swift</option>
-            <option value="rust" class="cyberpunk dropdown-option">Rust</option>
-            <option value="kotlin" class="cyberpunk dropdown-option">Kotlin</option>
-            <option value="typescript" class="cyberpunk dropdown-option">TypeScript</option>
-            <option value="html" class="cyberpunk dropdown-option">HTML</option>
-            <option value="css" class="cyberpunk dropdown-option">CSS</option>
-            <option value="sql" class="cyberpunk dropdown-option">SQL</option>
-            <option value="bash" class="cyberpunk dropdown-option">Bash</option>
-            <option value="perl" class="cyberpunk dropdown-option">Perl</option>
-            <option value="scala" class="cyberpunk dropdown-option">Scala</option>
-
-            <!-- Additional options -->
+        <div class="cyber-select" id="target_select">
+            <button class="cyber-select__trigger" type="button" aria-haspopup="listbox" aria-expanded="false">Python</button>
+            <ul class="cyber-select__menu" role="listbox"></ul>
+        </div>
+        <select id="target_lang" class="cyberpunk dropdown" style="position:absolute; opacity:0; pointer-events:none; height:0; width:0;">
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="csharp">C#</option>
+            <option value="cpp">C++</option>
+            <option value="ruby">Ruby</option>
+            <option value="go">Go</option>
+            <option value="php">PHP</option>
+            <option value="swift">Swift</option>
+            <option value="rust">Rust</option>
+            <option value="kotlin">Kotlin</option>
+            <option value="typescript">TypeScript</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="sql">SQL</option>
+            <option value="bash">Bash</option>
+            <option value="perl">Perl</option>
+            <option value="scala">Scala</option>
         </select>
         
         <button id="check_btn" class="cyberpunk2077 red">Translate</button>
@@ -73,6 +75,15 @@
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
         require(['vs/editor/editor.main'], function() {
+            async function loadGeminiApiKey() {
+                const response = await fetch('.env.local');
+                const text = await response.text();
+                const match = text.match(/GEMINI_API_KEY\s*=\s*(.+)/);
+                if (!match) {
+                    throw new Error('GEMINI_API_KEY not found in .env.local');
+                }
+                return match[1].trim();
+            }
             var codeEditor = monaco.editor.create(document.getElementById('editor-container'), {
                 value: '// Your code goes here...\n',
                 language: 'plaintext',
@@ -89,6 +100,51 @@
                 readOnly: true
             });
 
+            function initCyberSelect() {
+                const native = document.getElementById('target_lang');
+                const container = document.getElementById('target_select');
+                const trigger = container.querySelector('.cyber-select__trigger');
+                const menu = container.querySelector('.cyber-select__menu');
+
+                // Build menu from native options
+                menu.innerHTML = '';
+                Array.from(native.options).forEach((opt, idx) => {
+                    const li = document.createElement('li');
+                    li.className = 'cyber-select__option';
+                    li.setAttribute('role', 'option');
+                    li.dataset.value = opt.value;
+                    li.textContent = opt.textContent;
+                    if (idx === native.selectedIndex) li.setAttribute('aria-selected', 'true');
+                    li.addEventListener('click', () => {
+                        native.value = opt.value;
+                        trigger.textContent = opt.textContent;
+                        menu.querySelectorAll('.cyber-select__option').forEach(el => el.removeAttribute('aria-selected'));
+                        li.setAttribute('aria-selected', 'true');
+                        container.classList.remove('open');
+                        trigger.setAttribute('aria-expanded', 'false');
+                    });
+                    menu.appendChild(li);
+                });
+
+                function toggle() {
+                    const open = container.classList.toggle('open');
+                    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+                }
+
+                trigger.addEventListener('click', toggle);
+                document.addEventListener('click', (e) => {
+                    if (!container.contains(e.target)) {
+                        container.classList.remove('open');
+                        trigger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Initialize trigger text
+                trigger.textContent = native.options[native.selectedIndex].textContent;
+            }
+
+            initCyberSelect();
+
             document.getElementById('check_btn').addEventListener('click', async function() {
                 document.getElementById('loader').style.display = 'flex';
                 const sourceCode = codeEditor.getValue().trim();
@@ -100,8 +156,7 @@
                 }
                 try {
                     const modifiedPrompt = `Translate the following code from the source language to ${targetLanguage}:\n\n${sourceCode}`;
-                    const 
-                    apiKey = "YOUR_GEMINI_API_KEY"; // Replace with your Google AI Studio API key
+                    const apiKey = await loadGeminiApiKey();
                     const genAI = new GoogleGenerativeAI(apiKey);
                     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                     const result = await model.generateContent(modifiedPrompt);
