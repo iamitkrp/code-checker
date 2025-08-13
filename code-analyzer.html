@@ -50,22 +50,18 @@
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
         require(['vs/editor/editor.main'], function() {
-            async function loadGeminiApiKey() {
-                const fromStorage = localStorage.getItem('GEMINI_API_KEY');
-                if (fromStorage) return fromStorage.trim();
-                try {
-                    const response = await fetch('.env.local', { cache: 'no-store' });
-                    if (response.ok) {
-                        const text = await response.text();
-                        const match = text.match(/GEMINI_API_KEY\s*=\s*(.+)/);
-                        if (match) {
-                            const key = match[1].trim();
-                            localStorage.setItem('GEMINI_API_KEY', key);
-                            return key;
-                        }
-                    }
-                } catch (e) {}
-                throw new Error('GEMINI_API_KEY not found. Serve the app or set it via localStorage.');
+            async function serverGenerate(textPrompt) {
+                const resp = await fetch('/api/gemini', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: textPrompt })
+                });
+                if (!resp.ok) {
+                    const err = await resp.text();
+                    throw new Error(`Server error ${resp.status}: ${err}`);
+                }
+                const data = await resp.json();
+                return data.text || '';
             }
             var codeEditor = monaco.editor.create(document.getElementById('editor-container'), {
                 value:'// Your code goes here...\n',
@@ -95,12 +91,18 @@
     
                 try {
                     const modifiedPrompt = "Check if the following code has any errors and if so, provide the line number and error description. Also, provide the corrected code: \n\n" + inputCode;
-                    const apiKey = await loadGeminiApiKey();
-                    const genAI = new GoogleGenerativeAI(apiKey);
-                    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                    const result = await model.generateContent(modifiedPrompt);
-                    const response = await result.response;
-                    const text = await response.text();
+                    let text = '';
+                    try {
+                        text = await serverGenerate(modifiedPrompt);
+                    } catch (serverErr) {
+                        const fromStorage = localStorage.getItem('GEMINI_API_KEY');
+                        if (!fromStorage) throw serverErr;
+                        const genAI = new GoogleGenerativeAI(fromStorage.trim());
+                        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+                        const result = await model.generateContent(modifiedPrompt);
+                        const resp = await result.response;
+                        text = await resp.text();
+                    }
                     outputEditor.setValue(text);
                 } catch (error) {
                     console.error('Error:', error);
