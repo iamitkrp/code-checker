@@ -10,8 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/theme/dracula.min.css" />
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/editor/editor.main.css">
     <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
@@ -32,92 +31,84 @@
         <h1 id="homepage" class="cyberpunk-glitched-header">WRITIO</h1>
         <h1 class="cyberpunk glitched">CODE ANALYZER</h1>
         <h3 class="cyberpunk glitched">Enter your code here:</h3>
-        <textarea id="editor" class="cyberpunk">// Your code goes here...</textarea>
+        <div id="editor-container" style="height: 200px; width: auto; border: 1px solid #ccc;"></div>
         <button id="clear_input_btn" class="cyberpunk2077 green">Clear</button><br>
         <button id="check_btn" class="cyberpunk2077 red">Check..</button>
         
         <br>
         <h3 class="cyberpunk glitched">Result:</h3>
-        <textarea id="output" class="cyberpunk">// Result:</textarea>
+        <div id="output-container" style="height: 300px; width: auto; border: 1px solid #ccc;"></div>
         <button id="clear_output_btn" class="cyberpunk2077 green">Clear</button>
         <button id="copy_output_btn" class="cyberpunk2077 purple">Copy</button>
     </div>
     <footer>
-        <h2 class="cyberpunk glitched">Made by <span class="amit">AMIT.</span> </h2>
+        <h2 class="cyberpunk glitched">Made by <span class="amit">Arpit</span> </h2>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.7/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs/loader.min.js"></script>
     <script type="module">
         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
+        require(['vs/editor/editor.main'], function() {
+            var codeEditor = monaco.editor.create(document.getElementById('editor-container'), {
+                value:'// Your code goes here...\n',
+                language: 'plaintext',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                readOnly: false
+            });
     
-        var codeEditor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-            value:'\n// Your code goes here...',
-            mode: 'python',
-            theme: 'dracula',
-            matchBrackets: true,
-            autocloseBrackets: true,
-            lineWrapping: true,
-            viewportMargin: Infinity,
-            lineNumbers: true,
-            readOnly: false
-        });
+            var outputEditor = monaco.editor.create(document.getElementById('output-container'), {
+                value: '// Result:\n',
+                language: 'plaintext',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                readOnly: true
+            });
     
-        var outputEditor = CodeMirror.fromTextArea(document.getElementById('output'), {
-            value: '\n// Result:',
-            mode: 'python',
-            theme: 'dracula',
-            lineNumbers: true,
-            readOnly: true,
-            lineWrapping: true,
-            viewportMargin: Infinity
-        });
+            document.getElementById('check_btn').addEventListener('click', async function() {
+                document.getElementById('loader').style.display = 'flex';
     
-        document.getElementById('check_btn').addEventListener('click', async function() {
-            // Show the loader
-            document.getElementById('loader').style.display = 'flex';
+                const inputCode = codeEditor.getValue().trim();
+                if (!inputCode) {
+                    alert('Please fill in the Code field.');
+                    document.getElementById('loader').style.display = 'none';
+                    return;
+                }
     
-            const inputCode = codeEditor.getValue().trim();
-            if (!inputCode) {
-                alert('Please fill in the Code field.');
-                document.getElementById('loader').style.display = 'none'; // Hide loader if no input
-                return;
-            }
+                try {
+                    const modifiedPrompt = "Check if the following code has any errors and if so, provide the line number and error description. Also, provide the corrected code: \n\n" + inputCode;
+                    const apiKey = "YOUR_GEMINI_API_KEY"; // Replace with your Google AI Studio API key
+                    const genAI = new GoogleGenerativeAI(apiKey);
+                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                    const result = await model.generateContent(modifiedPrompt);
+                    const response = await result.response;
+                    const text = await response.text();
+                    outputEditor.setValue(text);
+                } catch (error) {
+                    console.error('Error:', error.message);
+                    alert('An error occurred. Please try again.');
+                } finally {
+                    document.getElementById('loader').style.display = 'none';
+                }
+            });
     
-            try {
-                const modifiedPrompt = "Check if the following code has any errors and if so, provide the line number and error description. Also, provide the corrected code: \n\n" + inputCode;
-                const apiKey = "YOUR_GEMINI_API_KEY"; // Replace with your Google AI Studio API key
-                const genAI = new GoogleGenerativeAI(apiKey);
-                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-                const result = await model.generateContent(modifiedPrompt);
-                const response = await result.response;
-                const text = await response.text();
-    
-                outputEditor.setValue(text);
-            } catch (error) {
-                console.error('Error:', error.message);
-                alert('An error occurred. Please try again.');
-            } finally {
-                // Hide the loader after processing
-                document.getElementById('loader').style.display = 'none';
-            }
-        });
-    
-        document.getElementById('clear_input_btn').addEventListener('click', function() {
-            codeEditor.setValue('\n// Your code goes here...');
-        });
+            document.getElementById('clear_input_btn').addEventListener('click', function() {
+                codeEditor.setValue('\n');
+            });
 
-        document.getElementById('homepage').addEventListener('click', function() {
+            document.getElementById('homepage').addEventListener('click', function() {
                 window.location.href = 'index.html';
             });
     
-        document.getElementById('clear_output_btn').addEventListener('click', function() {
-            outputEditor.setValue('\n// Result:');
-        });
+            document.getElementById('clear_output_btn').addEventListener('click', function() {
+                outputEditor.setValue('\n');
+            });
     
-        document.getElementById('copy_output_btn').addEventListener('click', function() {
-            const text = outputEditor.getValue();
-            navigator.clipboard.writeText(text);
+            document.getElementById('copy_output_btn').addEventListener('click', function() {
+                const text = outputEditor.getValue();
+                navigator.clipboard.writeText(text);
+            });
         });
     </script>
 </body>
