@@ -76,13 +76,21 @@
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
         require(['vs/editor/editor.main'], function() {
             async function loadGeminiApiKey() {
-                const response = await fetch('.env.local');
-                const text = await response.text();
-                const match = text.match(/GEMINI_API_KEY\s*=\s*(.+)/);
-                if (!match) {
-                    throw new Error('GEMINI_API_KEY not found in .env.local');
-                }
-                return match[1].trim();
+                const fromStorage = localStorage.getItem('GEMINI_API_KEY');
+                if (fromStorage) return fromStorage.trim();
+                try {
+                    const response = await fetch('.env.local', { cache: 'no-store' });
+                    if (response.ok) {
+                        const text = await response.text();
+                        const match = text.match(/GEMINI_API_KEY\s*=\s*(.+)/);
+                        if (match) {
+                            const key = match[1].trim();
+                            localStorage.setItem('GEMINI_API_KEY', key);
+                            return key;
+                        }
+                    }
+                } catch (e) {}
+                throw new Error('GEMINI_API_KEY not found. Serve the app or set it via localStorage.');
             }
             var codeEditor = monaco.editor.create(document.getElementById('editor-container'), {
                 value: '// Your code goes here...\n',
@@ -158,7 +166,7 @@
                     const modifiedPrompt = `Translate the following code from the source language to ${targetLanguage}:\n\n${sourceCode}`;
                     const apiKey = await loadGeminiApiKey();
                     const genAI = new GoogleGenerativeAI(apiKey);
-                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                     const result = await model.generateContent(modifiedPrompt);
                     const response = await result.response;
                     const text = await response.text();
@@ -166,8 +174,8 @@
                     const translatedCode = outputIndex !== -1 ? text.substring(0, outputIndex).trim() : text.trim();
                     outputEditor.setValue(translatedCode);
                 } catch (error) {
-                    console.error('Error:', error.message);
-                    alert('An error occurred. Please try again.');
+                    console.error('Error:', error);
+                    alert('Gemini error: ' + (error && error.message ? error.message : error));
                 } finally {
                     document.getElementById('loader').style.display = 'none';
                 }

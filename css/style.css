@@ -96,10 +96,7 @@ video {
   background-color: rgba(0, 0, 0, 0.5); 
   z-index: 0; 
 }
-.content-conatiner {
-  position: relative;
-  z-index: 1;
-}
+/* removed unused .content-conatiner (typo of .content-container) */
 
 body * {
   font-family: "Advent Pro", arial;
@@ -107,142 +104,11 @@ body * {
 
 /* Form fields */
 
-#editor-container,
-#output-container {
-  width: 1300px;
-  height: 400px;
-  border: 30px solid #000;
-  border-left: 5px solid #000;
-  border-right: 5px solid #000;
-  border-bottom: 15px solid #000;
-  clip-path: polygon(
-      0px 25px,
-      26px 0px,
-      calc(60% - 25px) 0px,
-      60% 25px,
-      100% 25px,
-      100% calc(100% - 10px),
-      calc(100% - 15px) calc(100% - 10px),
-      calc(80% - 10px) calc(100% - 10px),
-      calc(80% - 15px) calc(100% - 0px),
-      10px calc(100% - 0px),
-      0% calc(100% - 10px)
-  );
-  margin-bottom: 10px;
-  padding: 12px;
-}
+/* removed old fixed-width editor container (responsive version exists later) */
 
 /* Buttons and links */
 
-button.cyberpunk2077,
-a.cyberpunk2077 {
-  --background-color: var(--red-color);
-  display: block;
-  border: none;
-  border-radius: 0%;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 35px 75px;
-  margin: 10px;
-  position: relative;
-  color:var(--red-color);
-  border-right: 3px solid var(--border-color);
-  clip-path: polygon(
-    -15px 0%,
-    calc(100% + 15px) 0%,
-    calc(100% + 15px) 100%,
-    20px 100%,
-    -15px calc(100% - 35px)
-  );
-  cursor: pointer;
-  outline: none;
-  display: inline-block;
-}
-
-button.cyberpunk2077:hover,
-a.cyberpunk2077:hover,
-button.cyberpunk2077:focus,
-a.cyberpunk2077:focus {
-  animation-name: buttonhover;
-  animation-duration: var(--glitched-duration);
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  background-color: var(--cyberpunk8-scanline);
-}
-
-button.cyberpunk2077.red,
-a.cyberpunk2077.red {
-  --background-color: var(--Red-shade-bright);
-  padding: 26px 26px 26px 26px;
-}
-
-
-button.cyberpunk2077.green,
-a.cyberpunk2077.green {
-  --background-color: var(--green-color);
-}
-
-button.cyberpunk2077.blue,
-a.cyberpunk2077.blue {
-  --background-color: var(--blue-color);
-}
-
-button.cyberpunk2077:after,
-a.cyberpunk2077:after {
-  content: "A9X7Q3P2M";
-  display: block;
-  position: absolute;
-  bottom: 0px;
-  right: 25px;
-  padding: 2px 2px 0px 2px;
-  font-size: 0.6rem;
-  line-height: 0.6rem;
-  color: #faf6f6;
-}
-
-button.cyberpunk2077:hover:after,
-a.cyberpunk2077:hover:after,
-button.cyberpunk2077:focus:after,
-a.cyberpunk2077:focus:after {
-  animation-name: buttonhoverafter;
-  animation-duration: var(--glitched-duration);
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-}
-
-button.cyberpunk2077:before,
-a.cyberpunk2077:before {
-  --outside: 4px;
-  content: "";
-  position: absolute;
-  display: none;
-  width: calc(100% + (var(--outside) * 2));
-  height: calc(100% + (var(--outside) * 2));
-  border: 3px solid transparent;
-  border-radius: 10%;
-}
-
-button.cyberpunk2077:hover:before,
-a.cyberpunk2077:hover:before,
-button.cyberpunk2077:focus:before,
-a.cyberpunk2077:focus:before {
-  display: block;
-  animation-name: buttonhoverbefore;
-  animation-duration: var(--glitched-duration);
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-}
-
-button.cyberpunk2077:focus,
-a.cyberpunk2077:focus {
-  animation-name: buttonfocus;
-  animation-duration: var(--glitched-duration);
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-}
+/* removed older duplicate button.cyberpunk2077 rules (newer set kept below) */
 
 
 
@@ -820,9 +686,7 @@ h1.cyberpunk-glitched-header:before {
   
   
 
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--orange-color);
-  }
+  /* duplicate scrollbar hover removed */
   
   
   button#clear_output_btn {
@@ -928,24 +792,12 @@ button#clear_input_btn {
     outline: none;
     display: inline-block;
 }
-:root {
-    --glitched-duration: 2s;
-    --glitched-long-duration: 3s;
-    --yellow-color: #f9f002;
-    --orange-color: #ff9800;
-    --border-color: #8ae66e;
-    --red-color: #ff003c;
-    --blue-color: #136377;
-    --green-color: #446d44;
-    --purple-color: purple;
-}
+/* removed duplicated :root block (keep variables from the top of file) */
   
 
 
   
-body * {
-    font-family: "Advent Pro", arial;
-}
+/* removed duplicate body* font rule */
 
 /* Form fields */
 #editor-container,
@@ -971,71 +823,7 @@ body * {
 
 
 
-/* Radio Buttons */
-input[type="radio"].cyberpunk, input[type="checkbox"].cyberpunk {
-    appearance: none;
-    outline: none;
-    background-color: #000;
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    border-radius: 15%;
-}
-
-
-
-input[type="radio"].cyberpunk {
-    width: 20px;
-    height: 14px;
-}
-
-input[type="radio"].cyberpunk:after, input[type="checkbox"].cyberpunk:before,
-input[type="checkbox"].cyberpunk:after {
-    content: "";
-    position: absolute;
-    background-color: var(--yellow-color);
-    transition: background 0.3s, left 0.3s;
-}
-
-input[type="radio"].cyberpunk:after {
-    width: 8px;
-    height: 6px;
-    top: 2px;
-    left: 2px;
-}
-
-input[type="radio"].cyberpunk:checked:after {
-    background-color: var(--border-color);
-    left: 10px;
-}
-
-input[type="checkbox"].cyberpunk {
-    width: 20px;
-    height: 20px;
-    margin-bottom: -3px;
-}
-
-input[type="checkbox"].cyberpunk:before {
-    width: 8px;
-    height: 8px;
-    border: 2px solid var(--yellow-color);
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    top: 5px;
-    left: 4px;
-}
-
-input[type="checkbox"].cyberpunk:after {
-    width: 2px;
-    height: 7px;
-    top: 3px;
-    left: 9px;
-}
-
-input[type="checkbox"].cyberpunk:checked:before,
-input[type="checkbox"].cyberpunk:checked:after {
-    background-color: var(--border-color);
-}
+/* removed unused radio/checkbox styles */
 
 /* Buttons and links */
 button.cyberpunk2077, a.cyberpunk2077 {

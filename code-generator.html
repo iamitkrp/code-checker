@@ -52,13 +52,23 @@
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.34.1/min/vs' }});
         require(['vs/editor/editor.main'], function() {
             async function loadGeminiApiKey() {
-                const response = await fetch('.env.local');
-                const text = await response.text();
-                const match = text.match(/GEMINI_API_KEY\s*=\s*(.+)/);
-                if (!match) {
-                    throw new Error('GEMINI_API_KEY not found in .env.local');
+                const fromStorage = localStorage.getItem('GEMINI_API_KEY');
+                if (fromStorage) return fromStorage.trim();
+                try {
+                    const response = await fetch('.env.local', { cache: 'no-store' });
+                    if (response.ok) {
+                        const text = await response.text();
+                        const match = text.match(/GEMINI_API_KEY\s*=\s*(.+)/);
+                        if (match) {
+                            const key = match[1].trim();
+                            localStorage.setItem('GEMINI_API_KEY', key);
+                            return key;
+                        }
+                    }
+                } catch (e) {
+                    // ignore fetch errors; fall through to throw below
                 }
-                return match[1].trim();
+                throw new Error('GEMINI_API_KEY not found. Run via a local web server so .env.local can be fetched, or set it once with localStorage.setItem("GEMINI_API_KEY", "<your_key>") and reload.');
             }
             var promptEditor = monaco.editor.create(document.getElementById('editor-container'), {
                 value: '//Your prompt goes here... \n',
@@ -98,7 +108,7 @@
                     const modifiedPrompt = prompt + " code in {target_language} and print the output in a separate line";
                     const apiKey = await loadGeminiApiKey();
                     const genAI = new GoogleGenerativeAI(apiKey);
-                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                     const result = await model.generateContent(modifiedPrompt);
                     const response = await result.response;
                     const text = await response.text();
@@ -111,8 +121,8 @@
 
                     outputEditor.setValue(generatedCode);
                 } catch (error) {
-                    console.error('Error:', error.message);
-                    alert('An error occurred. Please try again.');
+                    console.error('Error:', error);
+                    alert('Gemini error: ' + (error && error.message ? error.message : error));
                 } finally {
                     // Hide the loader after processing
                     document.getElementById('loader').style.display = 'none';

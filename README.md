@@ -41,19 +41,19 @@ git clone https://github.com/yourusername/writio.git
 cd writio
 ```
 
-2. Provide your API key:
-- Create a file named `.env.local` in the project root
-- Add your key in the format `GEMINI_API_KEY=YOUR_KEY_HERE`
+2. Provide your API key (two options):
+- Recommended: create `.env.local` in the project root with a single line:
+  `GEMINI_API_KEY=YOUR_KEY_HERE`
+- Or set it once in the browser console (useful when opening files directly):
+  `localStorage.setItem('GEMINI_API_KEY', 'YOUR_KEY_HERE')`
 
-3. Serve the project:
-- Use any web server of your choice (e.g., Python's built-in server):
-```bash
-python -m http.server 8000
-```
-- Or use VSCode's Live Server extension
+3. Run locally (serving over HTTP avoids file:// restrictions):
+- Python: `python -m http.server 8000` then open `http://localhost:8000`
+- Node: `npx serve --no-clipboard --single`
+- VS Code: Live Server extension
 
-4. Access the application:
-- Open your browser and navigate to `http://localhost:8000`
+4. Open the app:
+- Navigate to `http://localhost:8000` in your browser
 
 ## Project Structure
 ```
