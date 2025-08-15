@@ -47,10 +47,15 @@ cd writio
 - Or set it once in the browser console (useful when opening files directly):
   `localStorage.setItem('GEMINI_API_KEY', 'YOUR_KEY_HERE')`
 
-3. Run locally (serving over HTTP avoids file:// restrictions):
-- Python: `python -m http.server 8000` then open `http://localhost:8000`
-- Node: `npx serve --no-clipboard --single`
-- VS Code: Live Server extension
+3. Run locally (Express server with working `/api/gemini`):
+   1. Install deps: `npm install`
+   2. Start server: `npm run start`
+   3. Open `http://localhost:8000`
+
+   Notes:
+   - The included Express server serves the static files and implements `POST /api/gemini` using `api/gemini.js`.
+   - If you still prefer a static server (e.g. Python/VS Code Live Server), set your key client-side once:
+     `localStorage.setItem('GEMINI_API_KEY', 'YOUR_KEY_HERE')` and reload. The app will fall back to client calls when the API route is unavailable.
 
 4. Open the app:
 - Navigate to `http://localhost:8000` in your browser
